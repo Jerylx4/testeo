@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoja A4 - Responsiva y Adaptable</title>
+    <style>
+        :root {
+            /* --- MAGIA RESPONSIVA --- */
+            /* El libro abierto ocupa el doble de su ancho. 
+               Garantizamos que el libro cerrado no supere el 45% del ancho de la pantalla
+               ni el 80% del alto, para que al abrirse encaje perfecto con márgenes. */
+            --max-w: 45vw;
+            --max-h: 80vh;
+            
+            /* Calculamos el alto manteniendo siempre la proporción A5 (1.414) */
+            --book-height: min(var(--max-h), calc(var(--max-w) * 1.414));
+            --book-width: calc(var(--book-height) / 1.414);
+        }
+
+        body { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0;
+            perspective: 1500px;
+            overflow: hidden; 
+            
+            /* --- FONDO DEL UNIVERSO --- */
+            background-color: #010107; 
+            background-image: 
+                radial-gradient(circle at 35% 45%, rgba(0, 0, 0, 0.85) 0%, transparent 35%),
+                radial-gradient(circle at 75% 35%, rgba(0, 0, 0, 0.9) 0%, transparent 40%),
+                radial-gradient(circle at 25% 75%, rgba(0, 0, 0, 0.8) 0%, transparent 30%),
+                radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.6) 0%, transparent 60%),
+                radial-gradient(circle at 20% 30%, rgba(180, 70, 255, 0.5) 0%, transparent 45%),
+                radial-gradient(circle at 80% 70%, rgba(255, 100, 255, 0.4) 0%, transparent 40%),
+                radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.9) 100%);
+        }
+
+        /* --- ESTRELLAS --- */
+        body::before {
+            content: ""; position: absolute; width: 1px; height: 1px; background: transparent;
+            box-shadow: 
+                10vw 20vh #fff, 30vw 15vh #fff, 50vw 10vh #eee, 70vw 25vh #fff, 90vw 5vh #ddd,
+                15vw 60vh #fff, 40vw 70vh #eee, 65vw 85vh #fff, 85vw 60vh #ddd, 25vw 90vh #fff,
+                5vw 5vh #fff, 15vw 10vh #fff, 25vw 2vh #eee, 35vw 8vh #fff, 45vw 1vh #fff, 
+                2vw 25vh #fff, 12vw 35vh #eee, 22vw 45vh #fff, 32vw 55vh #fff, 42vw 65vh #fff;
+            z-index: -1; 
+        }
+        
+        /* --- ESTILOS DE LA HOJA (Usa Variables CSS) --- */
+        .book {
+            width: var(--book-width); 
+            height: var(--book-height); 
+            position: relative; 
+            cursor: pointer;
+            transition: transform 0.8s ease;
+            box-shadow: 2px 2px 15px rgba(0,0,0,0.7); 
+        }
+
+        .book.open {
+            /* Se desplaza exactamente la mitad de su tamaño dinámico */
+            transform: translateX(calc(var(--book-width) / 2)); 
+            box-shadow: 0px 0px 30px rgba(0,0,0,0.9);
+        }
+
+        /* --- INTERIOR DERECHO --- */
+        .static-page {
+            position: absolute; 
+            width: 100%; height: 100%; 
+            background: #ffffff;
+            border: none; box-sizing: border-box; z-index: 1;
+            overflow: hidden; 
+        }
+
+        /* =========================================================
+           1. CAPA DE LA CÁMARA (Convertida a Porcentajes)
+           ========================================================= */
+        .video-layer {
+            position: absolute;
+            z-index: 1; 
+            
+            /* Tus ajustes anteriores traducidos a porcentajes para que escalen */
+            top: 18%; 
+            left: 26%;
+            width: 53%; 
+            height: 67%;
+        }
+
+        #webcam {
+            width: 100%; height: 100%; 
+            object-fit: cover; 
+            transform: scaleX(-1); 
+            border-radius: 10px; 
+        }
+
+        /* =========================================================
+           2. CAPA DEL MARCO (Convertida a Porcentajes)
+           ========================================================= */
+        .frame-layer {
+            position: absolute;
+            z-index: 2; 
+            pointer-events: none;
+            
+            /* Tus ajustes anteriores traducidos a porcentajes */
+            top: -0.5%; 
+            left: -16%;
+            width: 135%; 
+            height: 100%;
+        } 
+
+        .mirror-frame {
+            width: 100%; height: 100%; 
+            object-fit: fill; 
+        }
+
+        /* ========================================================= */
+
+        .camera-error {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            color: #ff4444; background: #222; text-align: center; padding: 20px;
+            box-sizing: border-box; display: none; z-index: 3;
+            font-size: clamp(0.8rem, 2vw, 1.2rem); /* Texto adaptable */
+        }
+
+        /* --- PÁGINA QUE SE DOBLA --- */
+        .folding-page {
+            position: absolute; width: 100%; height: 100%;
+            transform-origin: left center; transition: transform 0.8s ease;
+            transform-style: preserve-3d; z-index: 2; 
+        }
+
+        .face {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; display: flex; align-items: center;
+            justify-content: center; color: #333;
+            border: 1px solid #f0f0f0; box-sizing: border-box;
+            
+            /* Fuente adaptable: mínimo 1rem, crecerá con el viewport, máximo 1.5rem */
+            font-size: clamp(1rem, 3vw, 1.5rem); 
+        }
+
+        .front { background: #fdfdfd; box-shadow: 5px 0px 15px rgba(0,0,0,0.5); }
+        .back { background: #ffffff; transform: rotateY(180deg); border-right: none; box-shadow: none; }
+
+        .book.open .folding-page { 
+            transform: rotateY(-180deg); 
+            box-shadow: -10px 0px 20px rgba(0,0,0,0.6); 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="book" onclick="this.classList.toggle('open')">
+        
+        <div class="static-page">
+            <div class="video-layer">
+                <video id="webcam" autoplay playsinline></video>
+                <div class="camera-error" id="cameraError">
+                    No se pudo acceder a la cámara.
+                </div>
+            </div>
+
+            <div class="frame-layer">
+                <img src="marco.png" class="mirror-frame" alt="Marco dorado">
+            </div>
+        </div>
+
+        <div class="folding-page">
+            <div class="face front">Portada (Clic para abrir)</div>
+            <div class="face back">Interior Izquierdo</div>
+        </div>
+        
+    </div>
+
+    <script>
+        async function startWebcam() {
+            const video = document.getElementById('webcam');
+            const errorMessage = document.getElementById('cameraError');
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: "user" }, 
+                    audio: false 
+                });
+                video.srcObject = stream;
+            } catch (error) {
+                console.error("Error accediendo a la webcam:", error);
+                video.style.display = 'none';
+                errorMessage.style.display = 'flex';
+            }
+        }
+        window.addEventListener('load', startWebcam);
+    </script>
+
+</body>
+</html>
