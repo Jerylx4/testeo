@@ -73,7 +73,7 @@
         .watermark-flower {
             position: absolute;
             width: 45%; 
-            opacity: 0.08; /* Muy transparente */
+            opacity: 0.08; 
             z-index: 0; 
             pointer-events: none;
         }
@@ -144,7 +144,7 @@
         }
 
         .front-image {
-            width: 65%; max-width: 200px; height: auto;
+            width: 65%; max-width: 2000px; height: auto;
             margin: 20px 0 15px 0; object-fit: contain;
         }
 
@@ -152,7 +152,13 @@
             font-family: 'Cormorant Garamond', serif;
             color: var(--text-dark); 
             font-size: clamp(0.9rem, 1.8vw, 1.2rem);
-            font-style: italic; margin-top: 5px; opacity: 0.8; font-weight: 400;
+            font-style: italic; 
+            margin-top: 5px; 
+            opacity: 0.8; 
+            font-weight: 400;
+            /* AQUÍ ESTÁ EL AJUSTE: padding de 1cm (aprox 38px) a los lados */
+            padding: 0 1cm;
+            line-height: 1.3;
         }
 
         .front::after {
@@ -172,7 +178,6 @@
         .message-container {
             width: 100%; height: 100%; display: flex; flex-direction: column;
             justify-content: flex-start; overflow-y: auto; padding-top: 5%;
-            /* Keep text above flowers */
             position: relative;
             z-index: 1;
         }
@@ -210,6 +215,10 @@
             .front-image {
                 width: 65%; margin: 15px 0 10px 0;
             }
+            /* En móviles muy estrechos, reducimos un poquito ese margen lateral para que el texto no quede tan apretado como una columna */
+            .front-subtitle {
+                padding: 0 15px;
+            }
         }
     </style>
 </head>
@@ -240,7 +249,9 @@
             <div class="face front">
                 <h1 class="front-title">Feliz Día<br>de la Mujer</h1>
                 <img src="floresm.png" alt="Flores decorativas" class="front-image">
-                <p class="front-subtitle">De mi parte de manera muy especial para ti</p>
+                <p class="front-subtitle">
+                    Nunca he sido de quienes “celebran” el Día de la Mujer, pero sí de conmemorarlo y admirar la fuerza, el esfuerzo y la valentía de cada mujer.
+                </p>
             </div>
 
             <div class="face back">
