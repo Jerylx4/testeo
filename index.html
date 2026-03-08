@@ -150,28 +150,33 @@
             background: var(--light-page); 
             box-shadow: 5px 0px 15px rgba(0,0,0,0.15); 
             border: 1px solid rgba(183, 110, 121, 0.3); 
+            padding: 5%;
+            overflow: hidden;
         }
 
         .front-title {
             font-family: 'Cinzel', serif;
             color: var(--accent-color); 
-            font-size: clamp(1.3rem, 3.2vw, 2.3rem);
+            font-size: clamp(1.2rem, 4vw, 2.3rem);
             letter-spacing: 2px; margin: 0; text-transform: uppercase;
             text-shadow: 0 0 5px rgba(183, 110, 121, 0.2);
             line-height: 1.2; font-weight: 500;
         }
 
         .front-image {
-            width: 65%; max-width: 200px; height: auto;
-            margin: 20px 0 15px 0; object-fit: contain;
+            width: 60%; 
+            max-width: 180px; 
+            max-height: 35%; 
+            margin: 5% 0; 
+            object-fit: contain;
         }
 
         .front-subtitle {
             font-family: 'Cormorant Garamond', serif;
             color: var(--text-dark); 
-            font-size: clamp(0.9rem, 1.8vw, 1.2rem);
-            font-style: italic; margin-top: 5px; opacity: 0.8; font-weight: 400;
-            padding: 0 1cm; line-height: 1.3;
+            font-size: clamp(0.75rem, 2.5vw, 1.2rem);
+            font-style: italic; opacity: 0.8; font-weight: 400;
+            padding: 0 5%; line-height: 1.3; margin: 0;
         }
 
         .front::after {
@@ -223,10 +228,10 @@
                 --max-h: 85vh; 
             }
             .front-image {
-                width: 65%; margin: 15px 0 10px 0;
+                width: 70%; 
             }
             .front-subtitle {
-                padding: 0 15px;
+                padding: 0 2%;
             }
         }
     </style>
